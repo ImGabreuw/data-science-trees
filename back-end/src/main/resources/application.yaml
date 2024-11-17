@@ -1,3 +1,10 @@
+csv:
+  delimiter: ";"
+  batch-size: 1000
+  cache-expiration: 1h
+
 spring:
-  application:
-    name: back-end
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=3600s
