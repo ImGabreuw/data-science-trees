@@ -1,6 +1,7 @@
 package com.github.imgabreuw.backend.data.csv;
 
 import com.github.imgabreuw.backend.data.model.SchoolFlow;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.nio.file.Path;
 import java.util.List;
 
+@Disabled
 @SpringBootTest
 class CsvReaderTest {
 

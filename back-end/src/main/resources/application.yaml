@@ -1,6 +1,5 @@
 csv:
   delimiter: ";"
-  batch-size: 1000
   cache-expiration: 1h
 
 spring:

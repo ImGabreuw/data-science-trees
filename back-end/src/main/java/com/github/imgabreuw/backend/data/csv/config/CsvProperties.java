@@ -1,6 +1,5 @@
 package com.github.imgabreuw.backend.data.csv.config;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -18,9 +17,6 @@ public class CsvProperties {
 
     @NotBlank
     private String delimiter;
-
-    @Min(1)
-    private int batchSize;
 
     @NotNull
     private Duration cacheExpiration;
