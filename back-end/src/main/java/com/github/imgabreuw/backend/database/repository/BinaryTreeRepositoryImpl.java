@@ -34,7 +34,7 @@ public class BinaryTreeRepositoryImpl<T extends Comparable<T>> implements TreeRe
 
     @Override
     public void saveAll(Collection<T> entities) {
-        entities.parallelStream().forEach(this::save);
+        entities.forEach(this::save);
     }
 
     @Override

@@ -21,8 +21,9 @@ public class SchoolFlowService {
         repository.saveAll(schoolFlows);
     }
 
+    // FIXME ajustar métodos para a API
+
     public void findByIdPrimaryKey() {
-        // TODO adicionar lógica correta
         Predicate<SchoolFlow> byPrimaryKey = item ->
                 item.getYear() == 0 &&
                         item.getSchoolId() == 21118 &&
