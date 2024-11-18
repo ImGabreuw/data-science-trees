@@ -18,7 +18,7 @@ class CsvReaderTest {
 
     @Test
     void shouldReadCSV() {
-        Path filePath = Path.of("/home/geron/Projects/data-science-trees/back-end/dataset/Fluxo Escolar 2023 - por escola.csv");
+        String filePath = "/home/geron/Projects/data-science-trees/back-end/dataset/Fluxo Escolar 2023 - por escola.csv";
 
         List<SchoolFlow> schoolFlows = csvReader.readCsv(filePath, SchoolFlow.class);
         System.out.println(schoolFlows.subList(0, 5));

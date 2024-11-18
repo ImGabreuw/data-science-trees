@@ -28,8 +28,18 @@ public class CsvReader {
     private final CsvProperties properties;
 
     @Cacheable(value = "csvRecords", key = "#filePath.toString() + #clazz.getName()")
-    public <T> List<T> readCsv(Path filePath, Class<T> clazz) {
-        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
+    public <T> List<T> readCsv(String filePath, Class<T> clazz) {
+        Path path = Path.of(filePath);
+
+        if (!Files.exists(path)) {
+            throw new RuntimeException("File not found: " + path);
+        }
+
+        if (!path.getFileName().toString().endsWith(".csv")) {
+            throw new RuntimeException("File is not a CSV file: " + path);
+        }
+
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
             Map<String, FieldMapping> columnToFieldMap = annotationProcessor.processAnnotations(clazz);
             Map<Integer, String> headers = parseHeaders(reader.readLine());
 

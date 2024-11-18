@@ -1,5 +1,6 @@
-package com.github.imgabreuw.backend.tree;
+package com.github.imgabreuw.backend.structure;
 
+import com.github.imgabreuw.backend.database.structure.BST;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

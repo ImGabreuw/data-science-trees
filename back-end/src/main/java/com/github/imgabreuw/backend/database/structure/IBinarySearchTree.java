@@ -1,4 +1,4 @@
-package com.github.imgabreuw.backend.tree;
+package com.github.imgabreuw.backend.database.structure;
 
 import java.util.Optional;
 import java.util.stream.Stream;

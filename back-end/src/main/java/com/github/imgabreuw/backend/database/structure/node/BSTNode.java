@@ -1,4 +1,4 @@
-package com.github.imgabreuw.backend.tree.node;
+package com.github.imgabreuw.backend.database.structure.node;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

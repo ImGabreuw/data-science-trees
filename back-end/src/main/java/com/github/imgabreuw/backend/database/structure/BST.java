@@ -1,7 +1,7 @@
-package com.github.imgabreuw.backend.tree;
+package com.github.imgabreuw.backend.database.structure;
 
-import com.github.imgabreuw.backend.tree.node.BSTNode;
-import com.github.imgabreuw.backend.tree.node.Node;
+import com.github.imgabreuw.backend.database.structure.node.BSTNode;
+import com.github.imgabreuw.backend.database.structure.node.Node;
 
 public final class BST<T extends Comparable<T>> extends AbstractIBinarySearchTree<T> {
 
