@@ -1,7 +1,10 @@
 package com.github.imgabreuw.backend.app.config;
 
-import com.github.imgabreuw.backend.database.structure.factory.BSTStrategy;
-import com.github.imgabreuw.backend.database.structure.factory.TreeStrategy;
+import com.github.imgabreuw.backend.data.model.SchoolFlow;
+import com.github.imgabreuw.backend.database.repository.AVLRepositoryImpl;
+import com.github.imgabreuw.backend.database.repository.BSTRepositoryImpl;
+import com.github.imgabreuw.backend.database.repository.TreeRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +12,15 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfig {
 
     @Bean
-    public TreeStrategy treeStrategy() {
-        return new BSTStrategy();
+    @Qualifier("avlSchoolFlowTreeRepository")
+    public TreeRepository<SchoolFlow> avlSchoolFlowTreeRepository() {
+        return new AVLRepositoryImpl<>();
+    }
+
+    @Bean
+    @Qualifier("bstSchoolFlowTreeRepository")
+    public TreeRepository<SchoolFlow> bstSchoolFlowTreeRepository() {
+        return new BSTRepositoryImpl<>();
     }
 
 }

@@ -4,18 +4,22 @@ import com.github.imgabreuw.backend.data.csv.CsvReader;
 import com.github.imgabreuw.backend.data.model.SchoolFlow;
 import com.github.imgabreuw.backend.database.repository.TreeRepository;
 import com.github.imgabreuw.backend.metrics.Timed;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 @Service
-@RequiredArgsConstructor
 public class SchoolFlowService {
 
     private final TreeRepository<SchoolFlow> repository;
     private final CsvReader csvReader;
+
+    public SchoolFlowService(@Qualifier("bstSchoolFlowTreeRepository") TreeRepository<SchoolFlow> repository, CsvReader csvReader) {
+        this.repository = repository;
+        this.csvReader = csvReader;
+    }
 
     @Timed
     public void loadFromCSV(String filePath) {

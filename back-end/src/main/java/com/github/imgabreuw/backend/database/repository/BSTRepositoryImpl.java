@@ -2,7 +2,7 @@ package com.github.imgabreuw.backend.database.repository;
 
 import com.github.imgabreuw.backend.database.exception.DatabaseException;
 import com.github.imgabreuw.backend.database.structure.AbstractIBinarySearchTree;
-import com.github.imgabreuw.backend.database.structure.factory.TreeStrategy;
+import com.github.imgabreuw.backend.database.structure.BST;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 
@@ -13,21 +13,17 @@ import java.util.stream.Stream;
 
 @Log4j2
 @Repository
-public class BinaryTreeRepositoryImpl<T extends Comparable<T>> implements TreeRepository<T> {
+public class BSTRepositoryImpl<T extends Comparable<T>> implements TreeRepository<T> {
 
-    private final AbstractIBinarySearchTree<T> tree;
-
-    public BinaryTreeRepositoryImpl(TreeStrategy strategy) {
-        this.tree = strategy.createTree();
-    }
+    private final AbstractIBinarySearchTree<T> tree = new BST<>();
 
     @Override
     public void save(T entity) {
         try {
             tree.insert(entity);
-            log.debug("Entity saved successfully: {}", entity);
+            log.debug("BST saved entity: {}", entity);
         } catch (Exception e) {
-            log.error("Error saving entity: {}", e.getMessage());
+            log.error("BST save error", e);
             throw new DatabaseException("Failed to save entity", e);
         }
     }
@@ -39,9 +35,17 @@ public class BinaryTreeRepositoryImpl<T extends Comparable<T>> implements TreeRe
 
     @Override
     public Optional<T> find(Predicate<T> predicate) {
-        return tree.inOrderTraversal()
+        Optional<T> node = tree.inOrderTraversal()
                 .filter(predicate)
                 .findFirst();
+
+        if (node.isPresent()) {
+            log.debug("BST found entity: {}", node.get());
+        } else {
+            log.debug("BST not found entity");
+        }
+
+        return node;
     }
 
     @Override
@@ -53,9 +57,9 @@ public class BinaryTreeRepositoryImpl<T extends Comparable<T>> implements TreeRe
     public void delete(T entity) {
         try {
             tree.delete(entity);
-            log.debug("Entity deleted successfully: {}", entity);
+            log.debug("BST deleted entity: {}", entity);
         } catch (Exception e) {
-            log.error("Error deleting entity: {}", e.getMessage());
+            log.error("BST delete error", e);
             throw new DatabaseException("Failed to delete entity", e);
         }
     }
@@ -92,4 +96,5 @@ public class BinaryTreeRepositoryImpl<T extends Comparable<T>> implements TreeRe
         return tree.inOrderTraversal()
                 .filter(item -> item.compareTo(start) >= 0 && item.compareTo(end) <= 0);
     }
+
 }
