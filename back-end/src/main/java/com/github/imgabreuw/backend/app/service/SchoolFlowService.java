@@ -3,6 +3,7 @@ package com.github.imgabreuw.backend.app.service;
 import com.github.imgabreuw.backend.data.csv.CsvReader;
 import com.github.imgabreuw.backend.data.model.SchoolFlow;
 import com.github.imgabreuw.backend.database.repository.TreeRepository;
+import com.github.imgabreuw.backend.metrics.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class SchoolFlowService {
     private final TreeRepository<SchoolFlow> repository;
     private final CsvReader csvReader;
 
+    @Timed
     public void loadFromCSV(String filePath) {
         List<SchoolFlow> schoolFlows = csvReader.readCsv(filePath, SchoolFlow.class);
         repository.saveAll(schoolFlows);
