@@ -66,8 +66,8 @@ public class BSTRepositoryImpl<T extends Comparable<T>> implements TreeRepositor
 
     @Override
     public void deleteAll() {
-        while (!tree.isEmpty()) {
-            tree.delete(tree.min().orElseThrow());
+        while (tree.min().isPresent()) {
+            tree.delete(tree.min().get());
         }
     }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class SchoolFlowService {
@@ -26,6 +27,16 @@ public class SchoolFlowService {
         Arrays.stream(filesPath)
                 .map(filePath -> csvReader.readCsv(filePath, SchoolFlow.class))
                 .forEach(repository::saveAll);
+    }
+
+    @Timed
+    public List<SchoolFlow> findAll() {
+        return repository.findAll().toList();
+    }
+
+    @Timed
+    public void deleteAll() {
+        repository.deleteAll();
     }
 
     public long totalOfSchools() {
