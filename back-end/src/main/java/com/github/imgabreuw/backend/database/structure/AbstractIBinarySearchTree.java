@@ -19,8 +19,11 @@ public abstract sealed class AbstractIBinarySearchTree<T extends Comparable<T>> 
             throw new IllegalArgumentException("data cannot be null");
         }
 
-        root = doInsert(root, data);
-        size++;
+        try {
+            root = doInsert(root, data);
+            size++;
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     protected abstract Node<T> doInsert(Node<T> node, T data);

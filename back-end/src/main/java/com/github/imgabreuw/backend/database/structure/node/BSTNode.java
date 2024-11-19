@@ -7,10 +7,15 @@ import lombok.Data;
 @Data
 public final class BSTNode<T extends Comparable<T>> implements Node<T> {
 
-    private final T data;
+    private T data;
 
     private Node<T> left;
     private Node<T> right;
+
+    @Override
+    public void setData(T data) {
+        this.data = data;
+    }
 
     @Override
     public T getData() {

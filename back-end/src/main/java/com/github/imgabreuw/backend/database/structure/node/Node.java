@@ -2,6 +2,8 @@ package com.github.imgabreuw.backend.database.structure.node;
 
 public sealed interface Node<T extends Comparable<T>> permits BSTNode, AVLNode {
 
+    void setData(T data);
+
     T getData();
 
     Node<T> getLeft();

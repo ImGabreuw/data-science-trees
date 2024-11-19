@@ -7,6 +7,7 @@ public final class AVL<T extends Comparable<T>> extends AbstractIBinarySearchTre
 
     @Override
     protected Node<T> doInsert(Node<T> node, T data) {
+        // Inserção normal de BST
         if (node == null) {
             return new AVLNode<>(data);
         }
@@ -17,14 +18,41 @@ public final class AVL<T extends Comparable<T>> extends AbstractIBinarySearchTre
         } else if (cmp > 0) {
             node.setRight(doInsert(node.getRight(), data));
         } else {
-            return node; // Elemento duplicado não é inserido
+            return node;
         }
 
-        // Atualizar altura e balanceamento do nó
-        updateHeightAndBalanceFactor((AVLNode<T>) node);
+        // Atualizar altura
+        ((AVLNode<T>) node).setHeight(1 + Math.max(
+                height(node.getLeft()),
+                height(node.getRight())
+        ));
 
-        // Balancear o nó
-        return balance((AVLNode<T>) node);
+        int balance = getBalance((AVLNode<T>) node);
+
+        // Casos de balanceamento
+        // Caso Esquerda-Esquerda
+        if (balance > 1 && data.compareTo(node.getLeft().getData()) < 0) {
+            return rightRotate((AVLNode<T>) node);
+        }
+
+        // Caso Direita-Direita
+        if (balance < -1 && data.compareTo(node.getRight().getData()) > 0) {
+            return leftRotate((AVLNode<T>) node);
+        }
+
+        // Caso Esquerda-Direita
+        if (balance > 1 && data.compareTo(node.getLeft().getData()) > 0) {
+            node.setLeft(leftRotate((AVLNode<T>) node.getLeft()));
+            return rightRotate((AVLNode<T>) node);
+        }
+
+        // Caso Direita-Esquerda
+        if (balance < -1 && data.compareTo(node.getRight().getData()) < 0) {
+            node.setRight(rightRotate((AVLNode<T>) node.getRight()));
+            return leftRotate((AVLNode<T>) node);
+        }
+
+        return node;
     }
 
     @Override
@@ -34,28 +62,73 @@ public final class AVL<T extends Comparable<T>> extends AbstractIBinarySearchTre
         }
 
         int cmp = data.compareTo(node.getData());
-
         if (cmp < 0) {
             node.setLeft(doDelete(node.getLeft(), data));
         } else if (cmp > 0) {
             node.setRight(doDelete(node.getRight(), data));
         } else {
+            // Nó com um ou nenhum filho
             if (node.getLeft() == null || node.getRight() == null) {
-                node = (node.getLeft() != null) ? node.getLeft() : node.getRight();
+                Node<T> temp = null;
+                if (temp == node.getLeft()) {
+                    temp = node.getRight();
+                } else {
+                    temp = node.getLeft();
+                }
+
+                // Caso sem filhos
+                if (temp == null) {
+                    temp = node;
+                    node = null;
+                } else { // Caso com um filho
+                    node = temp;
+                }
             } else {
+                // Nó com dois filhos
                 Node<T> successor = findMin(node.getRight());
-                ((AVLNode<T>) node).setData(successor.getData());
+                node.setData(successor.getData());
                 node.setRight(doDelete(node.getRight(), successor.getData()));
             }
         }
 
+        // Se a árvore tinha apenas um nó
         if (node == null) {
             return null;
         }
 
-        updateHeightAndBalanceFactor((AVLNode<T>) node);
+        // Atualizar altura
+        ((AVLNode<T>) node).setHeight(1 + Math.max(
+                height(node.getLeft()),
+                height(node.getRight())
+        ));
 
-        return balance((AVLNode<T>) node);
+        // Calcular fator de balanceamento
+        int balance = getBalance((AVLNode<T>) node);
+
+        // Casos de balanceamento
+        // Caso Esquerda-Esquerda
+        if (balance > 1 && getBalance((AVLNode<T>) node.getLeft()) >= 0) {
+            return rightRotate((AVLNode<T>) node);
+        }
+
+        // Caso Esquerda-Direita
+        if (balance > 1 && getBalance((AVLNode<T>) node.getLeft()) < 0) {
+            node.setLeft(leftRotate((AVLNode<T>) node.getLeft()));
+            return rightRotate((AVLNode<T>) node);
+        }
+
+        // Caso Direita-Direita
+        if (balance < -1 && getBalance((AVLNode<T>) node.getRight()) <= 0) {
+            return leftRotate((AVLNode<T>) node);
+        }
+
+        // Caso Direita-Esquerda
+        if (balance < -1 && getBalance((AVLNode<T>) node.getRight()) > 0) {
+            node.setRight(rightRotate((AVLNode<T>) node.getRight()));
+            return leftRotate((AVLNode<T>) node);
+        }
+
+        return node;
     }
 
     private void updateHeightAndBalanceFactor(AVLNode<T> node) {
@@ -66,39 +139,30 @@ public final class AVL<T extends Comparable<T>> extends AbstractIBinarySearchTre
     }
 
     private int height(Node<T> node) {
-        return (node == null) ? 0 : ((AVLNode<T>) node).getHeight();
+        if (node == null) {
+            return -1;
+        }
+        return ((AVLNode<T>) node).getHeight();
     }
 
-    private AVLNode<T> balance(AVLNode<T> node) {
-        if (node.getBalanceFactor() > 1) { // Subárvore esquerda é mais alta
-            if (((AVLNode<T>) node.getLeft()).getBalanceFactor() < 0) {
-                node.setLeft(leftRotate((AVLNode<T>) node.getLeft())); // Rotação esquerda-direita
-            }
-
-            return rightRotate(node);
+    private int getBalance(AVLNode<T> node) {
+        if (node == null) {
+            return 0;
         }
-
-        if (node.getBalanceFactor() < -1) { // Subárvore direita é mais alta
-            if (((AVLNode<T>) node.getRight()).getBalanceFactor() > 0) {
-                node.setRight(rightRotate((AVLNode<T>) node.getRight())); // Rotação direita-esquerda
-            }
-            return leftRotate(node);
-        }
-
-        return node;
+        return height(node.getLeft()) - height(node.getRight());
     }
 
     private AVLNode<T> rightRotate(AVLNode<T> y) {
         AVLNode<T> x = (AVLNode<T>) y.getLeft();
         AVLNode<T> T2 = (AVLNode<T>) x.getRight();
 
-        // Rotação
+        // Realizar rotação
         x.setRight(y);
         y.setLeft(T2);
 
-        // Atualizar alturas e fatores de balanceamento
-        updateHeightAndBalanceFactor(y);
-        updateHeightAndBalanceFactor(x);
+        // Atualizar alturas
+        y.setHeight(1 + Math.max(height(y.getLeft()), height(y.getRight())));
+        x.setHeight(1 + Math.max(height(x.getLeft()), height(x.getRight())));
 
         return x;
     }
@@ -107,15 +171,16 @@ public final class AVL<T extends Comparable<T>> extends AbstractIBinarySearchTre
         AVLNode<T> y = (AVLNode<T>) x.getRight();
         AVLNode<T> T2 = (AVLNode<T>) y.getLeft();
 
-        // Rotação
+        // Realizar rotação
         y.setLeft(x);
         x.setRight(T2);
 
-        // Atualizar alturas e fatores de balanceamento
-        updateHeightAndBalanceFactor(x);
-        updateHeightAndBalanceFactor(y);
+        // Atualizar alturas
+        x.setHeight(1 + Math.max(height(x.getLeft()), height(x.getRight())));
+        y.setHeight(1 + Math.max(height(y.getLeft()), height(y.getRight())));
 
         return y;
     }
+
 }
 

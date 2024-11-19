@@ -20,6 +20,11 @@ public final class AVLNode<T extends Comparable<T>> implements Node<T> {
     }
 
     @Override
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    @Override
     public T getData() {
         return data;
     }
